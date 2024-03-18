@@ -2,7 +2,7 @@ import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.codec.digest.MurmurHash3;
 
 public class BloomFilter {
-    private final byte[] bitArray;
+    private byte[] bitArray;
     private final int bitArraySize;
     private final int numHashFunctions;
 
@@ -12,6 +12,13 @@ public class BloomFilter {
         this.bitArray = new byte[(bitArraySize + 7) / 8];
         this.numHashFunctions = numHashFunctions;
     }
+
+    public void loadBitArray(byte[] bitArray) {
+        // Method to directly set the bit array from loaded data
+        // If using a BitSet, convert byte[] back to BitSet
+        this.bitArray = bitArray; // Or convert to BitSet
+    }
+
 
     public void add(String element) {
         int[] hashes = createHashes(element);
@@ -44,5 +51,17 @@ public class BloomFilter {
             hashes[i] = MurmurHash3.hash32x86(bytes, 0, bytes.length, 104729 + i);
         }
         return hashes;
+    }
+
+    public byte[] getBitArray() {
+        return bitArray;
+    }
+
+    public int getBitArraySize() {
+        return bitArraySize;
+    }
+
+    public int getNumHashFunctions() {
+        return numHashFunctions;
     }
 }
