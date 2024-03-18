@@ -5,7 +5,7 @@ import java.util.List;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
 
         TokenBucketRateLimiter rateLimiter = TokenBucketRateLimiter.Builder.newInstance()
                 .setCapacity(5)
@@ -38,7 +38,10 @@ public class Main {
             bf.add(word);
         }
 
-        List<String> wordsToCheck = new ArrayList<>(words.subList(2000, 3000));
+        BloomFilterSaver.saveBloomFilter(bf, "/Users/gauravgoyal/Learn/resources/bloom_data.bf");
+        bf = BloomFilterLoader.loadBloomFilter("/Users/gauravgoyal/Learn/resources/bloom_data.bf");
+
+        List<String> wordsToCheck = new ArrayList<>(words.subList(0, 3000));
         for (String word : wordsToCheck) {
             if (!bf.mightContain(word)) {
                 System.out.printf("Word: '%s' is present in bloom filter: %s.%n", word, false);
@@ -58,7 +61,7 @@ public class Main {
                 if(counter <= 0) {
                     break;
                 }
-                words.add(word);
+                words.add(word.trim());
                 counter--;
             }
         } catch (IOException e) {
